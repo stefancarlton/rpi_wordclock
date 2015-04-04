@@ -25,8 +25,8 @@ class plugin:
         language = config.get('plugin_time_default', 'language')
         if language == 'german':
             self.taw = wcp_time_german.time_german()
-		elif language == 'english':
-		    self.taw = wcp_time_english.time_english()
+        elif language == 'english':
+            self.taw = wcp_time_english.time_english()
         else:
             print('Could not detect language: ' + language + '.')
             print('Choosing default: german')
