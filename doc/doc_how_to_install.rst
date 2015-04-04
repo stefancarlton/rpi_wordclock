@@ -25,7 +25,7 @@ If not, check this website, to adjust it: http://perlgeek.de/en/article/set-up-a
 
 To install 3rd party dependencies (packages) enter in a terminal/commandline::
 
-    sudo apt-get install python-pip python-scipy scons git
+    sudo apt-get install python-pip python-scipy scons git swig
 
 
 .. _3rd_party_deps_python:
@@ -57,11 +57,15 @@ Install 3rd-party dependencies (compiled on your own).
 Install rpi_ws281x to your home-directory (to access leds)::
 
     cd ~
-    git clone https://github.com/jgarff/rpi_ws281x.git
+    git clone git@github.com:richardghirst/rpi_ws281x.git
     cd rpi_ws281x
+	python setup.py install
     sudo scons
 
 .. note::
+    There are two libraries available, jgarff/rpi_ws281x original and richardghirst/rpi_ws281x. RichardGHirtst version
+	works with Raspberry Pi 2.
+	
     Since this library is continiously updated: A version, which is tested to work with the wordclock is commit 6cffc95: 
     https://github.com/jgarff/rpi_ws281x/tree/6cffc954a3fc25f0d741d03b575ad9cdf3068103
 
@@ -71,6 +75,15 @@ Install fontdemo to your home-directory (to render strings)::
     git clone https://gist.github.com/5488053.git
 
 This installs fontdemo.py to ~/5488053.
+
+Install python-py for binding to the freetype library:
+
+    cd ~
+	git clone https://github.com/rougier/freetype-py.git
+	cd python-py
+	python setup.py build
+	python setup.py install
+	
 
 Install pywapi as indicated on https://code.google.com/p/python-weather-api/#Weather.com
 
