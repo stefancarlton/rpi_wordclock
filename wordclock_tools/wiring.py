@@ -27,16 +27,8 @@ class wiring:
         print('  Num of LEDs: ' + str(self.LED_COUNT))
 
         wiring_layout = config.get('wordclock_display', 'wiring_layout')
-        if wiring_layout == 'bernds_wiring':
-            self.wcl = bernds_wiring(self.WCA_WIDTH, self.WCA_HEIGHT)
-        elif wiring_layout == 'christians_wiring':
-            self.wcl = christians_wiring(self.WCA_WIDTH, self.WCA_HEIGHT)
-        elif wiring_layout == 'timos_wiring':
-            self.wcl = timos_wiring(self.WCA_WIDTH, self.WCA_HEIGHT)
-        else:
-            print('Warning: No valid wiring layout found. Falling back to default!')
-            self.wcl = bernds_wiring(self.WCA_WIDTH, self.WCA_HEIGHT)
-
+        self.wcl = english_wiring(self.WCA_WIDTH, self.WCA_HEIGHT)
+        
     def setColorBy1DCoordinates(self, strip, ledCoordinates, color):
         '''
         Linear mapping from top-left to bottom right
@@ -62,7 +54,7 @@ class wiring:
         '''
         return self.wcl.mapMinutes(min)
 
-class bernds_wiring:
+class english_wiring:
     '''
     A class, holding all information of the wordclock's layout to map given
     timestamps, 2d-coordinates to the corresponding LEDs (corresponding to
@@ -96,106 +88,13 @@ class bernds_wiring:
         This implementation assumes the minutes to be wired as first and last two leds of the led-strip
         '''
         if min == 1:
-            return 113
+            return 100
         elif min == 2:
-            return 1
+            return 101
         elif min == 3:
-            return 112
+            return 108
         elif min == 4:
-            return 0
-        else:
-            print('WARNING: Out of range, when mapping minutes...')
-            print(min)
-            return 0
-
-class christians_wiring:
-    '''
-    A class, holding all information of the wordclock's layout to map given
-    timestamps, 2d-coordinates to the corresponding LEDs (corresponding to
-    the individual wiring/layout of any wordclock).
-    If a different wordclock wiring/layout is chosen, this class needs to be
-    adopted.
-    '''
-
-    def __init__(self, WCA_WIDTH, WCA_HEIGHT):
-        self.WCA_WIDTH   = WCA_WIDTH
-        self.WCA_HEIGHT  = WCA_HEIGHT
-
-    def getStripIndexFrom2D(self, x, y):
-        '''
-        Mapping coordinates to the wordclocks display
-        Needs hardware/wiring dependent implementation
-        Final range:
-             (0,0): top-left
-             (self.WCA_WIDTH-1, self.WCA_HEIGHT-1): bottom-right
-        '''
-        if y%2 == 0:
-            pos = (self.WCA_HEIGHT-y-1)*self.WCA_WIDTH+x
-        else:
-            pos = (self.WCA_HEIGHT*self.WCA_WIDTH)-(self.WCA_WIDTH*y)-x-1
-        return pos
-
-    def mapMinutes(self, min):
-        '''
-        Access minutes (1,2,3,4)
-        Needs hardware/wiring dependent implementation
-        This implementation assumes the minutes to be wired as first and last two leds of the led-strip
-        '''
-        if min == 1:
-            return 110
-        elif min == 2:
-            return 111
-        elif min == 3:
-            return 112
-        elif min == 4:
-            return 113
-        else:
-            print('WARNING: Out of range, when mapping minutes...')
-            print(min)
-            return 0
-
-
-class timos_wiring:
-    '''
-    A class, holding all information of the wordclock's layout to map given
-    timestamps, 2d-coordinates to the corresponding LEDs (corresponding to
-    the individual wiring/layout of any wordclock).
-    If a different wordclock wiring/layout is chosen, this class needs to be
-    adopted.
-    '''
-
-    def __init__(self, WCA_WIDTH, WCA_HEIGHT):
-        self.WCA_WIDTH   = WCA_WIDTH
-        self.WCA_HEIGHT  = WCA_HEIGHT
-
-    def getStripIndexFrom2D(self, x, y):
-        '''
-        Mapping coordinates to the wordclocks display
-        Needs hardware/wiring dependent implementation
-        Final range:
-             (0,0): top-left
-             (self.WCA_WIDTH-1, self.WCA_HEIGHT-1): bottom-right
-        '''
-        if x%2 == 0:   # even columns 0,2,4,6,8,10
-            pos = (x)*self.WCA_HEIGHT+y+2     # last +2 for the minute LEDs before the WCA
-        else:          # odd columns 1,3,5,7,9
-            pos = (self.WCA_HEIGHT)+(self.WCA_HEIGHT*x)-y+1
-        return pos
-
-    def mapMinutes(self, min):
-        '''
-        Access minutes (1,2,3,4)
-        Needs hardware/wiring dependent implementation
-        This implementation assumes the minutes to be wired as first and last two leds of the led-strip
-        '''
-        if min == 1:
-            return 1
-        elif min == 2:
-            return 113
-        elif min == 3:
-            return 112
-        elif min == 4:
-            return 0
+            return 109
         else:
             print('WARNING: Out of range, when mapping minutes...')
             print(min)

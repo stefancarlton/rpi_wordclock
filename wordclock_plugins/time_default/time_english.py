@@ -9,31 +9,56 @@ class time_english():
     def __init__(self):
         self.prefix = range(0,2) +  range(3,6)
         self.minutes=[[], \
-            range(7,11) + range(35,39), \
-            range(11,15) + range(35,39), \
-            range(26,33) + range(35,39), \
-            range(15,22) + range(35,39), \
-            range(7,11) + range(39,42) + range(44,48), \
-            range(44,48), \
-            range(7,11) + range(35,39) + range(44,48), \
-            range(15,22) + range(39,42), \
-            range(26,33) + range(39,42), \
-            range(11,15) + range(39,42), \
-            range(7,11) + range(39,42) ]
-        self.hours= [range(49,54), \
-            range(57,60), \
-            range(55,59), \
-            range(67,71), \
-            range(84,88), \
-            range(73,77), \
-            range(100,105), \
-            range(60,66), \
-            range(89,93), \
+            #five past
+            range(26,29) + range(40,43), \
+            #ten past
+            range(17,19) + range(40,43), \
+            #quarter
+            range(30,36) + range(40,43), \
+            #twenty past
+            range(20,25) + range(40,43), \
+            #twentyfive past
+            range(20,29) + range(40,43), \
+            #half past
+            range(13,16) + range(40,43), \
+            #twentyfive to
+            range(20,29) + range(38,39), \
+            #twenty to
+            range(20,25) + range(38,39), \
+            #quarter to
+            range(30,36) + range(38,39), \
+            #ten to
+            range(17,19) + range(38,39), \
+            #five to
+            range(26,29) + range(38,39) ]
+        self.hours= [ \
+            #twelve
+            range(90,95)
+            #one
+            range(70,72), \
+            #two
+            range(60,62), \
+            #three
+            range(45,49), \
+            #four
+            range(50,53), \
+            #five
+            range(96,99), \
+            #six
+            range(77,79), \
+            #seven
             range(80,84), \
-            range(93,97), \
-            range(77,80), \
-            range(49,54)]
-        self.full_hour= range(107,110)
+            #eight
+            range(64,68), \
+            #nine
+            range(86,89), \
+            #ten
+            range(73,75), \
+            #eleven
+            range(54,59), \
+            #twelve
+            range(90,95)]
+        self.full_hour= range(102,107)
 
     def get_time(self, time, withPrefix=True):
         hour=time.hour%12+(1 if time.minute/5 > 4 else 0)
