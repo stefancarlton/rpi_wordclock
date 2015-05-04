@@ -7,30 +7,30 @@ class time_english():
     '''
 
     def __init__(self):
-        self.prefix = range(0,2) +  range(3,6)
+        self.prefix = range(0,1) +  range(3,4)
         self.minutes=[[], \
             #five past
-            range(26,29) + range(40,43), \
+            range(20,23) + range(45,49), \
             #ten past
-            range(17,19) + range(40,43), \
+            range(10,12) + range(45,49), \
             #quarter
-            range(30,36) + range(40,43), \
+            range(33,39) + range(45,49), \
             #twenty past
-            range(20,25) + range(40,43), \
+            range(25,29) + range(45,49), \
             #twentyfive past
-            range(20,29) + range(40,43), \
+            range(20,29) + range(45,49), \
             #half past
-            range(13,16) + range(40,43), \
+            range(13,16) + range(45,49), \
             #twentyfive to
-            range(20,29) + range(38,39), \
+            range(20,29) + range(30,31), \
             #twenty to
-            range(20,25) + range(38,39), \
+            range(25,29) + range(30,31), \
             #quarter to
-            range(30,36) + range(38,39), \
+            range(33,39) + range(30,31), \
             #ten to
-            range(17,19) + range(38,39), \
+            range(10,12) + range(30,31), \
             #five to
-            range(26,29) + range(38,39) ]
+            range(20,23) + range(30,31) ]
         self.hours= [ \
             #twelve
             range(90,95)
