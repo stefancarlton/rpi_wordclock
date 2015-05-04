@@ -33,7 +33,7 @@ class time_english():
             range(20,23) + range(30,31) ]
         self.hours= [ \
             #twelve
-            range(90,95)
+            range(90,95), \
             #one
             range(70,72), \
             #two
