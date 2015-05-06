@@ -26,6 +26,7 @@ def get_letter_coords(wca_top_left,x,x_spacing,y,y_spacing, side, col_num):
     elif(side=='back'):
         return wca_top_left[0]+(col_num-x-1)*x_spacing, wca_top_left[1]+y*y_spacing
 
+    
 def get_min_coords(width, height, minute_margin, min_num, side):
     if (side=='front' and min_num == 1) or (side=='back' and min_num == 2):
         return (minute_margin, minute_margin)
@@ -39,11 +40,14 @@ def get_min_coords(width, height, minute_margin, min_num, side):
         print('ERROR: Invalid ' + str(min_num))
 
 def create_svg(lang, config, side='front', mode='stancil'):
+    #height = word array height + margin + minute row
+    #width  = word array width + margin
+    
     if not mode == 'stancil':
         wiring_type='_' + config.get('wordclock_display','wiring_layout')
     else:
         wiring_type=''
-    outpt_file = mode + '_' + side + wiring_type + '.svg'
+    outpt_file =  'rects.svg'
     print('Rendering ' + outpt_file + '...')
     print('  Side .........: ' + side)
     print('  Mode .........: ' + mode)
@@ -53,25 +57,35 @@ def create_svg(lang, config, side='front', mode='stancil'):
     print('  Font-type.....: ' + font_type)
     font_size = config.get('stancil_parameter', 'font_size')
     print('  Font-size.....: ' + font_size)
-    height=float(config.get('stancil_parameter', 'height'))
-    print('  Height .......: ' + str(height) + 'mm')
-    width =float(config.get('stancil_parameter', 'width'))
-    print('  Width ........: ' + str(width) + 'mm')
-    wca_height=float(config.get('stancil_parameter', 'wca_height'))
-    print('  Wca height ...: ' + str(wca_height) + 'mm')
-    wca_width =float(config.get('stancil_parameter', 'wca_width'))
-    print('  Wca width ....: ' + str(wca_width) + 'mm')
+    
+    #wca_height=float(config.get('stancil_parameter', 'wca_height'))
+
+    
     row_num=len(content)
     print('  Wca rows .....: ' + str(row_num))
     col_num=len(content[0].decode('utf-8'))
     print('  Wca columns ..: ' + str(col_num))
     minute_margin=float(config.get('stancil_parameter', 'minute_margin'))
     minute_diameter=float(config.get('stancil_parameter', 'minute_diameter'))
+    
+    wca_height = float(config.get('stancil_parameter', 'wca_height'))
+    print('  Wca height ...: ' + str(wca_height) + 'mm')
+    wca_width =float(config.get('stancil_parameter', 'wca_width'))
+    print('  Wca width ....: ' + str(wca_width) + 'mm')
+    
+    wca_margin=float(config.get('stancil_parameter', 'wca_margin'))
+    print('  Wca margin ..: ' + str(wca_margin))
+    
+    wcbr_height = wca_height/row_num
+    
+    height=wca_height + (wca_margin*2)
+    print('  Height .......: ' + str(height) + 'mm')
+    
+    width =wca_width + (wca_margin*2)
+    print('  Width ........: ' + str(width) + 'mm')
+    
     rm=minute_diameter/2
 
-    # iterate over coordinates
-    x_coords=range(0, col_num, 1)
-    y_coords=range(0, row_num, 1)
 
     # Create directory to store layout
     file_dir = os.path.join('wordclock_layouts', lang + '_' + str(col_num) + 'x' + str(row_num))
@@ -79,29 +93,50 @@ def create_svg(lang, config, side='front', mode='stancil'):
         os.makedirs(file_dir)
     full_path=os.path.join(file_dir, outpt_file)
 
-    # Set colors
-    if mode=='stancil':
-        fg='rgb(255,255,255)'
-        bg='rgb(0,0,0)'
-    else:
-        fg='rgb(0,0,0)'
-        bg='rgb(255,255,255)'
-
+    fg='rgb(255,255,255)'
+    st='rgb(0,0,0)'
+    bg='rgb(255,255,255)'
+    wc_style='fill:none;fill-opacity:1;'\
+          'stroke:'+st+';stroke-width:0.2822222222;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;'\
+          'text-anchor:middle;'\
+          'font-family:'+font_type+';'\
+          'font-size:'+str(font_size)
+          
+    wc_style_small='fill:none;fill-opacity:1;'\
+          'stroke:'+st+';stroke-width:0.282222222;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;'\
+          'text-anchor:middle;'\
+          'font-family:'+font_type+';'\
+          'font-size:11;'
+    
     # Generate header
     layout = svgwrite.Drawing(full_path, \
             size = (str(width)+'mm', str(height)+'mm'), \
             viewBox=('0 0 ' + str(width) + ' ' + str(height)))
     # Assure set background-color to bg
-    layout.add(layout.rect(insert=(0, 0),\
-            size=('100%', '100%'), rx=None, ry=None, fill=bg))
-    # Create layout-group for text
-    text_layout=layout.g(style=\
-            'text-anchor:middle;'\
-            'fill:'+fg+';'\
-            'font-family:'+font_type+';'\
-            'font-size:'+str(font_size if mode=='stancil' else 3))
 
+    # Create layout-group for text
+    text_layout=layout.g(style=str(wc_style))
+
+    # top 
+    layout.add( layout.line(start=(0,0), end=(width, 0), stroke='rgb(0,0,0)'))
+    # left
+    layout.add( layout.line(start=(0,0), end=(0, height), stroke='rgb(0,0,0)'))
+    #right
+    layout.add( layout.line(start=(width,0), end=(width, height), stroke='rgb(0,0,0)'))
+    #bottom
+    layout.add( layout.line(start=(0, height), end=(width,height), stroke='rgb(0,0,0)')) 
+            
+    # top 
+    #text_layout.add( layout.line(start=(4,4), end=(width-4, 4), stroke='rgb(0,0,0)'))
+    # left
+    #text_layout.add( layout.line(start=(4,4), end=(4, height-4), stroke='rgb(0,0,0)'))
+    #right
+    #text_layout.add( layout.line(start=(width-4,4), end=(width-4, height-4), stroke='rgb(0,0,0)'))
+    #bottom
+    #text_layout.add( layout.line(start=(4, height-4), end=(width-4,height-4), stroke='rgb(0,0,0)')) 
+            
     # Process letters
+    #wca_top_left = [ wca_margin, (height-wca_margin)]
     wca_top_left = [(width-wca_width)/2, (height-wca_height)/2]
     x_coords = range(0,col_num,1)
     y_coords = range(0,row_num,1)
@@ -113,80 +148,39 @@ def create_svg(lang, config, side='front', mode='stancil'):
     y_sub_spacing = y_spacing/5.0
     wca_index_1d = 0
 
-    # Add annotations
-    if not mode == 'stancil':
-        layout.add(layout.text(lang + ' --- ' + side+'-view --- ' + wiring_type, insert=(width/2, minute_margin),
-            style='text-anchor:middle;'\
-            'fill:rgb(0,255,0);'\
-            'font-family:'+font_type+';'\
-            'font-size: 10'))
-    # Add the wiring according to the chosen wiring layout
-    if mode=='wiring':
-        wcl = wiring.wiring(config)
-        led_count = col_num*row_num+4
-        for i in range(0, led_count-1):
-            # Draw wiring from start ...
-            wire_start = searchInWCA(wcl, i)
-            if wire_start != None:
-                coords_start = get_letter_coords(wca_top_left,wire_start[0],x_spacing,wire_start[1],y_spacing, side, col_num)
-            else:
-                wire_start = searchInMinutes(wcl, i)
-                coords_start = get_min_coords(width, height, minute_margin, wire_start, side)
-            # ... to end
-            wire_end = searchInWCA(wcl, i+1)
-            if wire_end != None:
-                coords_end = get_letter_coords(wca_top_left,wire_end[0],x_spacing,wire_end[1],y_spacing, side, col_num)
-            else:
-                wire_end = searchInMinutes(wcl, i+1)
-                coords_end = get_min_coords(width, height, minute_margin, wire_end, side)
-            text_layout.add(layout.line((coords_start[0], coords_start[1]), (coords_end[0], coords_end[1]), stroke='rgb(255,0,0)'))
-
+    wca_top_left=(30, 35)
+    
     # Draw characters
     for y in y_coords:
         for x in x_coords:
-            coords=get_letter_coords(wca_top_left,x,x_spacing,y,y_spacing, side, col_num)
-            if(mode=='stancil'):
-                # Write only characters
-                text_layout.add(layout.text((content[y].decode('utf-8')[x]), insert = (coords[0],coords[1]+float(font_size)/2.0)))
-            else:
-                # Write characters (top left)
-                coords_tl = coords[0]-x_sub_spacing, coords[1]-y_sub_spacing
-                text_layout.add(layout.text((content[y].decode('utf-8')[x]), insert = coords_tl))
-
-                # Write 1D coordinate (top right)
-                coords_tr = coords[0]+x_sub_spacing, coords[1]-y_sub_spacing
-                text_layout.add(layout.text(str(wca_index_1d), insert = coords_tr))
-
-                # Write 2D coordinate (bottom left)
-                coords_bl = coords[0]-x_sub_spacing, coords[1]+y_sub_spacing
-                text_layout.add(layout.text(( '(' +str(x) + "," + str(y) + ')'), insert = coords_bl))
-
-                # Placeholder for bottom-left
-                #coords_br = coords[0]+x_sub_spacing, coords[1]+y_sub_spacing
-                #text_layout.add(layout.text((content[y].decode('utf-8')[x]), insert = coords_br, fill=fg, style='text-anchor: middle'))
-
-                # Add cross
-                text_layout.add(layout.line((coords[0], coords[1]-y_sub_spacing), (coords[0], coords[1]+y_sub_spacing), stroke=fg))
-                text_layout.add(layout.line((coords[0]-x_sub_spacing, coords[1]), (coords[0]+x_sub_spacing, coords[1]), stroke=fg))
-
+            coords=(wca_top_left[0]+(x*30), wca_top_left[1]+(y*33))
+            #coords=get_letter_coords(wca_top_left,x,x_spacing,y,y_spacing, side, col_num)
+           
+            # Write only characters
+            #text_layout.add(layout.text((content[y].decode('utf-8')[x]), insert = (coords[0],coords[1]+float(font_size)/2.0)))
+            loc_x = coords[0] - 3
+            loc_y = coords[1] -3
+            
+            text_layout.add( layout.rect( insert=(loc_x, loc_y ), rx=None, ry=None, stroke='rgb(0,0,0)', size=(6,6) ))
+            
             wca_index_1d +=1
 
+            
+#def get_letter_coords(wca_top_left,x,x_spacing,y,y_spacing, side, col_num):
+#    if(side=='front'):
+#        return wca_top_left[0]+x*x_spacing, wca_top_left[1]+y*y_spacing
+#    elif(side=='back'):
+#        return wca_top_left[0]+(col_num-x-1)*x_spacing, wca_top_left[1]+y*y_spacing
+            
     # Process minutes
-    for min_num in [1, 2, 3, 4]:
-        min_coords = get_min_coords(width, height, minute_margin, min_num, side)
-        if(mode=='stancil'):
-            text_layout.add(layout.circle(\
-                    center=min_coords,\
-                    r=rm, fill=fg)\
-                    )
-        else:
-            text_layout.add(layout.text(str(min_num),\
-                    insert = (min_coords[0]-x_sub_spacing,min_coords[1]-y_sub_spacing),\
-                    fill=fg)\
-                    )
-            text_layout.add(layout.line((min_coords[0], min_coords[1]-y_sub_spacing), (min_coords[0], min_coords[1]+y_sub_spacing), stroke=fg))
-            text_layout.add(layout.line((min_coords[0]-x_sub_spacing, min_coords[1]), (min_coords[0]+x_sub_spacing, min_coords[1]), stroke=fg))
 
+    #min_coords = get_letter_coords(wca_top_left, 8, x_spacing, row_num, y_spacing, side, col_num)
+    #min_coords = (wca_top_left[0]+wca_width-48.655, min_coords[1])
+    
+    
+    
+    #layout.add(layout.text('O\' CLOCK', insert=('281.96655','355.26889'), style=str(wc_style)) )
+            
     # Fuse layouts
     layout.add(text_layout)
 
@@ -201,7 +195,7 @@ def main():
     except getopt.GetoptError as err:
         print(str(err))
         sys.exit(2)
-    configFile = 'wordclock_config/wordclock_config.example.cfg'
+    configFile = 'wordclock_config/wordclock_config.cfg'
     process_all = False
     for o, a in opts:
         if o in ('-a', '--all'):
@@ -226,8 +220,6 @@ def main():
     for lang in all_languages:
         print('Processing layouts for ' +str(lang) + '.')
         create_svg(lang, cfg, side='front', mode='stancil')
-        create_svg(lang, cfg, side='front', mode='wiring')
-        create_svg(lang, cfg, side='back', mode='wiring')
 
 if __name__ == '__main__':
     main()
