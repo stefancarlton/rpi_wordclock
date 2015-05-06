@@ -54,7 +54,6 @@ class plugin:
                 [wcc.BLACK, wcc.Color(30,30,30), wcc.Color(30,30,30)]]
         self.color_mode_pos = 0
         self.rb_pos = 0 # index position for "rainbow"-mode
-        self.harware_interface = config.get('hardware_interface')
 		
     def run(self, wcd, wci):
         '''
@@ -71,36 +70,4 @@ class plugin:
             wcd.setColorBy1DCoordinates(wcd.strip, taw_indices, self.word_color)
             wcd.setMinutes(now, self.minute_color)
             wcd.show()
-			if(  self.hardware_interface )
-                event = wci.waitSecondsForEvent([wci.button_left, wci.button_return, wci.button_right], 10)
-                # Switch display color, if button_left is pressed
-                if (event == wci.button_left):
-                    self.color_mode_pos += 1
-                    if self.color_mode_pos == len(self.color_modes):
-                        self.color_mode_pos = 0
-                    self.bg_color     = self.color_modes[self.color_mode_pos][0]
-                    self.word_color   = self.color_modes[self.color_mode_pos][1]
-                    self.minute_color = self.color_modes[self.color_mode_pos][2]
-                    time.sleep(0.2)
-                # Return to main menu, if button_return is pressed
-                if (event == wci.button_return):
-                    return
-                if (false && event == wci.button_right):
-                    self.bg_color = wcc.BLACK
-                    wcd.setColorToAll(self.bg_color, includeMinutes=True)
-                    while wci.getPinState(wci.button_right):
-                        # BEGIN: Rainbow generation as done in rpi_ws281x strandtest example! Thanks to Tony DiCola for providing :)
-                        if self.rb_pos < 85:
-                            self.word_color = self.minute_color = wcc.Color(3*self.rb_pos, 255-3*self.rb_pos, 0)
-                        elif self.rb_pos < 170:
-                            self.word_color = self.minute_color = wcc.Color(255-3*(self.rb_pos-85), 0, 3*(self.rb_pos-85))
-                        else:
-                            self.word_color = self.minute_color = wcc.Color(0, 3*(self.rb_pos-170), 255-3*(self.rb_pos-170))
-                        # END: Rainbow generation as done in rpi_ws281x strandtest example! Thanks to Tony DiCola for providing :)
-                        wcd.setColorBy1DCoordinates(wcd.strip, taw_indices, self.word_color)
-                        wcd.setMinutes(now, self.minute_color)
-                        wcd.show()
-                        self.rb_pos += 1
-                        if self.rb_pos == 256: self.rb_pos = 0
-                        time.sleep(0.02)
 

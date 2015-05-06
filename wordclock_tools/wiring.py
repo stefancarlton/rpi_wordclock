@@ -67,7 +67,7 @@ class english_wiring:
         self.WCA_WIDTH   = WCA_WIDTH
         self.WCA_HEIGHT  = WCA_HEIGHT
         
-        selft.WCA_GRID = [[0 for x in range(WCA_HEIGHT)] for x in range(self.WCA_WIDTH)] 
+        self.WCA_GRID = [[0 for x in range(WCA_HEIGHT+1)] for x in range(self.WCA_WIDTH+1)] 
         self.WCA_GRID[0]=[99, 98, 77, 76, 55, 54, 33, 32, 11, 10]
         self.WCA_GRID[1]=[100, 97, 78, 75, 56, 53, 34, 31, 12, 9]
         self.WCA_GRID[2]=[101, 96, 79, 74, 57, 52, 35, 30, 13, 8]
@@ -89,7 +89,7 @@ class english_wiring:
              (0,0): top-left
              (self.WCA_WIDTH-1, self.WCA_HEIGHT-1): bottom-right
         '''
-        return self.WCA_GRID[y,x]
+        return self.WCA_GRID[y][x]
 
     def mapMinutes(self, min):
         '''
@@ -99,14 +99,14 @@ class english_wiring:
         '''
         
         if min == 1:
-            return self.getStripIndexFrom2D(self, 10,0)
+            return self.getStripIndexFrom2D(0, 10)
         elif min == 2:
-            return self.getStripIndexFrom2D(self, 10,1)
+            return self.getStripIndexFrom2D(1, 10)
         elif min == 3:
-            return self.getStripIndexFrom2D(self, 10,8)
+            return self.getStripIndexFrom2D(8, 10)
         elif min == 4:
-            return self.getStripIndexFrom2D(self, 10,9)
+            return self.getStripIndexFrom2D(9, 10)
         else:
             print('WARNING: Out of range, when mapping minutes...')
             print(min)
-            return self.getStripIndexFrom2D(self, 10,0)
+            return self.getStripIndexFrom2D(0, 10)

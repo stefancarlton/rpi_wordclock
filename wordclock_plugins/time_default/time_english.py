@@ -7,51 +7,51 @@ class time_english():
     '''
 
     def __init__(self):
-        self.prefix = range(0,1) +  range(3,4)
+        self.prefix = range(0,2) +  range(3,5)
         self.minutes=[[], \
             #five past
-            range(20,23) + range(45,49), \
+            range(27,30) + range(40,45), \
             #ten past
-            range(10,12) + range(45,49), \
+            range(17,20) + range(40,45), \
             #quarter
-            range(33,39) + range(45,49), \
+            range(30,37) + range(40,45), \
             #twenty past
-            range(25,29) + range(45,49), \
+            range(20,26) + range(40,45), \
             #twentyfive past
-            range(20,29) + range(45,49), \
+            range(20,30) + range(40,45), \
             #half past
-            range(13,16) + range(45,49), \
+            range(13,17) + range(40,45), \
             #twentyfive to
-            range(20,29) + range(30,31), \
+            range(20,30) + range(38,40), \
             #twenty to
-            range(25,29) + range(30,31), \
+            range(20,26) + range(38,40), \
             #quarter to
-            range(33,39) + range(30,31), \
+            range(30,37) + range(38,40), \
             #ten to
-            range(10,12) + range(30,31), \
+            range(17,20) + range(38,40), \
             #five to
-            range(20,23) + range(30,31) ]
+            range(27,30) + range(38,40) ]
         self.hours= [ \
             #twelve
-            range(90,95), \
+            range(90,96), \
             #one
-            range(70,72), \
+            range(70,73), \
             #two
-            range(60,62), \
+            range(60,63), \
             #three
-            range(45,49), \
+            range(45,50), \
             #four
-            range(50,53), \
+            range(50,54), \
             #five
-            range(96,99), \
+            range(96,100), \
             #six
-            range(77,79), \
+            range(77,80), \
             #seven
-            range(80,84), \
+            range(80,85), \
             #eight
-            range(64,68), \
+            range(64,69), \
             #nine
-            range(86,89), \
+            range(86,90), \
             #ten
             range(73,75), \
             #eleven
