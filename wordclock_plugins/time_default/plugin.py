@@ -5,6 +5,7 @@ import time_german
 import time_swabian
 import time_english
 import wordclock_tools.wordclock_colors as wcc
+import wordclock_tools.delay as delay
 
 class plugin:
     '''
@@ -22,17 +23,7 @@ class plugin:
         self.name = os.path.dirname(__file__).split('/')[-1]
 
         # Choose language
-        language = config.get('plugin_' + self.name, 'language')
-        if language == 'german':
-            self.taw = time_german.time_german()
-        elif language == 'swabian':
-            self.taw = time_swabian.time_swabian()
-        elif language == 'english':
-            self.taw = time_english.time_english()
-        else:
-            print('Could not detect language: ' + language + '.')
-            print('Choosing default: german')
-            self.taw = time_german.time_german()
+        self.taw = time_english.time_english()
 
         self.bg_color     = wcc.BLACK  # default background color
         self.word_color   = wcc.WWHITE # default word color
@@ -54,6 +45,17 @@ class plugin:
                 [wcc.BLACK, wcc.Color(30,30,30), wcc.Color(30,30,30)]]
         self.color_mode_pos = 0
         self.rb_pos = 0 # index position for "rainbow"-mode
+
+    def getIndicies(self):
+        now = datetime.datetime.now()
+        # Returns indices, which represent the current time, when beeing illuminated
+        return self.taw.get_time(now)
+
+    def setTime(self, wcd):
+        wcd.setColorBy1DCoordinates(wcd.strip, self.getIndicies(), self.word_color)
+        now = datetime.datetime.now()
+        wcd.setMinutes(now, self.minute_color)
+        wcd.show()
 		
     def run(self, wcd, wci):
         '''
@@ -63,11 +65,5 @@ class plugin:
             # Set background color
             wcd.setColorToAll(self.bg_color, includeMinutes=True)
             # Set current time
-            now = datetime.datetime.now()
-            # Returns indices, which represent the current time, when beeing illuminated
-            taw_indices = self.taw.get_time(now)
-            #TODO: Improve rendering of time during while-loop: Render array only once per 5 minutes...
-            wcd.setColorBy1DCoordinates(wcd.strip, taw_indices, self.word_color)
-            wcd.setMinutes(now, self.minute_color)
-            wcd.show()
-
+            self.setTime(wcd)
+            #@delay(2.0)
