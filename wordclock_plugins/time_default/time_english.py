@@ -10,17 +10,17 @@ class time_english():
         self.prefix = range(0,2) +  range(3,5)
         self.minutes=[[], \
             #five past
-            range(27,30) + range(40,45), \
+            range(26,30) + range(40,44), \
             #ten past
-            range(17,20) + range(40,45), \
+            range(17,20) + range(40,44), \
             #quarter
-            range(30,37) + range(40,45), \
+            range(30,37) + range(40,44), \
             #twenty past
-            range(20,26) + range(40,45), \
+            range(20,26) + range(40,44), \
             #twentyfive past
-            range(20,30) + range(40,45), \
+            range(20,30) + range(40,44), \
             #half past
-            range(13,17) + range(40,45), \
+            range(13,17) + range(40,44), \
             #twentyfive to
             range(20,30) + range(38,40), \
             #twenty to
@@ -30,7 +30,7 @@ class time_english():
             #ten to
             range(17,20) + range(38,40), \
             #five to
-            range(27,30) + range(38,40) ]
+            range(26,30) + range(38,40) ]
         self.hours= [ \
             #twelve
             range(90,96), \
@@ -53,12 +53,12 @@ class time_english():
             #nine
             range(86,90), \
             #ten
-            range(73,75), \
+            range(73,76), \
             #eleven
-            range(54,59), \
+            range(54,60), \
             #twelve
-            range(90,95)]
-        self.full_hour= range(102,107)
+            range(90,96)]
+        self.full_hour= range(102,108)
 
     def get_time(self, time, withPrefix=True):
         hour=time.hour%12+(1 if time.minute/5 > 4 else 0)
