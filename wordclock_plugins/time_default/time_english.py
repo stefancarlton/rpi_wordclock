@@ -61,7 +61,7 @@ class time_english():
         self.full_hour= range(102,108)
 
     def get_time(self, time, withPrefix=True):
-        hour=time.hour%12+(1 if time.minute/5 > 4 else 0)
+        hour=time.hour%12
         minute=time.minute/5
         # Assemble indices
         return  \
