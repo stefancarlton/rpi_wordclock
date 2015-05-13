@@ -63,11 +63,14 @@ class time_english():
     def get_time(self, time, withPrefix=True):
         hour=time.hour%12
         minute=time.minute/5
+        if(  time.minute > 30 ):
+           hour = hour + 1
         # Assemble indices
-        return  \
+        to_display = \
             (self.prefix if withPrefix else []) + \
             self.minutes[minute] + \
             self.hours[hour] + \
-            ([60] if (hour == 1 and minute != 0) else []) + \
             (self.full_hour if (minute == 0) else [])
+
+        return to_display
 

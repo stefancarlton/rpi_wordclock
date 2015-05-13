@@ -66,4 +66,5 @@ class plugin:
             wcd.setColorToAll(self.bg_color, includeMinutes=True)
             # Set current time
             self.setTime(wcd)
+            time.sleep(1)
             #@delay(2.0)
