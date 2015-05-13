@@ -3,7 +3,7 @@ import os
 import time
 import time_english
 import wordclock_tools.wordclock_colors as wcc
-
+import tornado.websocket
 
 class plugin(tornado.websocket.WebSocketHandler):
     '''
@@ -38,11 +38,9 @@ class plugin(tornado.websocket.WebSocketHandler):
               [wcc.WWHITE, wcc.BLACK, wcc.BLACK],
               [wcc.BLACK, wcc.Color(30,30,30), wcc.Color(30,30,30)]]
         
-      self.setColorsFromIndex(0)
+      self.setColorsFromIndex(0, False)
       self.setIncTimePrefix(True)
         
-      self.rb_pos = 0 # index position for "rainbow"-mode
-
     def getIndicies(self, time):
       '''
       Returns indices, which represent the current time, when illuminated
@@ -55,22 +53,22 @@ class plugin(tornado.websocket.WebSocketHandler):
       Sets the inclusion of the time prefix (IT IS)
       '''
       self.inc_time_prefix = inc_time_prefix
-      self.setTime(self.wcd)
       
-    def setColorsFromIndex(self, color_index):
+    def setColorsFromIndex(self, color_index, set_display=True):
       '''
       Set the colours to be used from the index
       '''
-      self.setColors(self.color_modes[self.color_mode_pos][0], self.color_modes[self.color_mode_pos][1], self.color_modes[self.color_mode_pos][2])
+      self.setColors(self.color_modes[color_index][0], self.color_modes[color_index][1], self.color_modes[color_index][2], set_display)
         
-    def setColors(self, bg_color, word_color, minute_color):
+    def setColors(self, bg_color, word_color, minute_color, set_display=True):
       '''
       set the colours by 
       '''
       self.bg_color     = bg_color
       self.word_color   = word_color
       self.minute_color = minute_color
-      self.setDisplay(self.wcd)
+      if( set_display ):
+          self.setDisplay(self.wcd)
 
     
     def setTime(self, wcd):
@@ -93,6 +91,7 @@ class plugin(tornado.websocket.WebSocketHandler):
       '''
       Displays time until aborted by user interaction on pin button_return
       '''
+      self.wcd = wcd
       while True:
         self.setDisplay(wcd)
         #@delay(2.0)
