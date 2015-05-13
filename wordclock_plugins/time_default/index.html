@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lina's Wordclock</title>  
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script>
+  jQuery(function($){
+    if (!("WebSocket" in window)) {
+      alert("Your browser does not support web sockets");
+    }else{
+      setup();
+    }
+    function setup(){
+     
+      // Note: You have to change the host var 
+      // if your client runs on a different machine than the websocket server
+      
+      var host = "ws://192.168.0.14:9090/ws";
+      var socket = new WebSocket(host);
+      //console.log("socket status: " + socket.readyState);   
+      
+      var $txt = $("#data");
+      var $btnSend = $("#sendtext");
+
+      $txt.focus();
+
+      // event handlers for UI
+      $btnSend.on('click',function(){
+        var text = $txt.val();
+        if(text == ""){
+          return;
+        }
+        socket.send(text);
+        $txt.val("");    
+      });
+
+      $txt.keypress(function(evt){
+        if(evt.which == 13){
+          $btnSend.click();
+        }
+      });
+
+      // event handlers for websocket
+      if(socket){
+        socket.onopen = function(){
+          //alert("connection opened....");
+        }
+        
+        socket.onmessage = function(msg){
+          showServerResponse(msg.data);
+        }
+
+        socket.onclose = function(){
+          //alert("connection closed....");
+          showServerResponse("The connection has been closed.");
+        }
+
+      }else{
+        console.log("invalid socket");
+      }
+
+      function showServerResponse(txt){
+        var p = document.createElement('p');
+        p.innerHTML = txt;
+        document.getElementById('output').appendChild(p); 
+      }	
+    }
+  });
+
+  </script>
+</head>
+<body>
+  <div id="send">
+    <select id="colours" name="colours">
+      <option value="0">Black W-White W-White</option>
+      <option value="1">Black White White</option>
+      <option value="2">Black Pink Green</option>
+      <option value="3">Black, Red, Yellow</option>
+      <option value="4">Black, Blue, Red</option>
+      <option value="5">Black, Red, Blue</option>
+      <option value="6">Yellow, Red, Blue</option>
+      <option value="7">Red, Blue, Blue</option>
+      <option value="8">Red, White, White</option>
+      <option value="9">Green, Yellow, Pink</option>
+      <option value="10">W-White, Black, Black</option>
+    </select>
+    <input type="button" id="sendtext" value="Change Colour"/>
+  </div>
+  <div id="output"></div>
+</body>
+</html>
