@@ -7,7 +7,6 @@ import wordclock_tools.wordclock_colors as wcc
 import wordclock_tools.wordclock_display as wcd
 import wordclock_tools.wordclock_interface as wci
 
-import wordclock_server.webserver as webserver
 
 class wordclock:
     '''
