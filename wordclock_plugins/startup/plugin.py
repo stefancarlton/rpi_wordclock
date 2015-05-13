@@ -25,7 +25,7 @@ class plugin:
         self.bg_color   = wcc.BLACK
         self.word_color = wcc.WWHITE
         self.rb_pos     = 0
-        for x in range(0,300):
+        for x in range(0,400):
           if self.rb_pos < 85:
               self.word_color = self.minute_color = wcc.Color(3*self.rb_pos, 255-3*self.rb_pos, 0)
           elif self.rb_pos < 170:
