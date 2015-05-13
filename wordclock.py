@@ -7,6 +7,7 @@ import wordclock_tools.wordclock_colors as wcc
 import wordclock_tools.wordclock_display as wcd
 import wordclock_tools.wordclock_interface as wci
 
+import wordclock_server.webserver as webserver
 
 class wordclock:
     '''
@@ -62,6 +63,9 @@ class wordclock:
             if plugin == 'time_default':
                 print('  Selected "' + plugin + '" as default plugin')
                 self.default_plugin = index
+            if plugin == 'startup':
+                self.default_startup = index
+            
             print('Imported plugin ' + str(index) + ': "' + plugin + '".')
             index +=1
             try:
@@ -73,9 +77,9 @@ class wordclock:
     def startup(self):
         '''
         Startup behavior
-        '''
+        '''        
         if self.config.getboolean('wordclock', 'show_startup_message'):
-            self.wcd.showText(self.config.get('wordclock', 'startup_message'))
+            self.runPlugin(self.default_startup)
 
 
     def runPlugin(self, plugin_index):
@@ -94,43 +98,20 @@ class wordclock:
         # Cleanup display after exiting plugin
         self.wcd.resetDisplay()
 
+    def doWebServer(self):
+      Application([
+        url(r"/story/([0-9]+)", StoryHandler, dict(db=db), name="story")
+      ])
 
     def run(self):
         '''
         Makes the wordclock run...
         '''
         plugin_index = self.default_plugin
-
-        # Run the wordclock forever
-        while True:
-
-            # Run the default plugin
-            self.runPlugin(self.default_plugin)
-
-            # If plugin.run exits, loop through menu to select next plugin
-            plugin_selected = False
-            while not plugin_selected:
-                # The showIcon-command expects to have a plugin logo available
-                self.wcd.showIcon(plugin=self.plugins[plugin_index].name, iconName='logo')
-                pin = self.wci.waitForEvent([self.wci.button_left, self.wci.button_return, self.wci.button_right], cps=10)
-                if pin == self.wci.button_left:
-                    plugin_index -=1
-                    if plugin_index == -1:
-                        plugin_index = len(self.plugins)-1
-                    time.sleep(self.wci.lock_time)
-                if pin == self.wci.button_return:
-                    time.sleep(self.wci.lock_time)
-                    plugin_selected = True
-                if pin == self.wci.button_right:
-                    plugin_index +=1
-                    if plugin_index == len(self.plugins):
-                        plugin_index = 0
-                    time.sleep(self.wci.lock_time)
-
-            # Run selected plugin
-            self.runPlugin(plugin_index)
-
-            # After leaving selected plugin, start over again with the default plugin...
+        
+        # Run the default plugin
+        self.runPlugin(self.default_plugin)
+        
 
 if __name__ == '__main__':
     word_clock = wordclock()
