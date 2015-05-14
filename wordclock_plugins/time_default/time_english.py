@@ -63,7 +63,7 @@ class time_english():
     def get_time(self, time, withPrefix=True):
         hour=time.hour%12
         minute=time.minute/5
-        if(  time.minute > 30 ):
+        if(  time.minute > 34 ):
            hour = hour + 1
         # Assemble indices
         to_display = \
