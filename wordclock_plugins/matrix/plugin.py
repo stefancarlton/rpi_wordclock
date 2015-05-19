@@ -3,6 +3,7 @@
 import os
 import wordclock_tools.wordclock_colors as wcc
 import random
+import time
 
 class plugin:
     '''
@@ -33,7 +34,7 @@ class plugin:
         Displays rain until aborted by user interaction on pin button_return
         '''
         # initialize rain start: set to end coordinate
-        rain = [20 for _ in range(0, 11)]
+        rain = [20 for _ in range(0, 10)]
         while True:
             # Set background color
             wcd.setColorToAll(self.bg_color, includeMinutes=True)
@@ -55,12 +56,4 @@ class plugin:
                     rain[x] = y + 1
             wcd.show()
             # input handling
-            event = wci.waitSecondsForEvent([wci.button_return, wci.button_left, wci.button_right], 0.1)
-            if event == wci.button_return:
-                return
-            elif event == wci.button_left:
-                self.threshold = min(0.95, self.threshold + 0.05)
-            elif event == wci.button_right:
-                self.threshold = max(0.7, self.threshold - 0.05)
-
-
+            time.sleep(0.1)
